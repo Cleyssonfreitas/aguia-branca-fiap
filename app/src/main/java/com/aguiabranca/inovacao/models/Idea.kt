@@ -3,7 +3,7 @@ package com.aguiabranca.inovacao.models
 import com.google.firebase.database.PropertyName
 
 enum class IdeaStatus {
-    RASCUNHO, SUBMETIDA, APROVADA, REJEITADA, EM_PROGRESSO, CONCLUIDA
+    ENVIADA, SUBMETIDA, APROVADA, REJEITADA, EM_PROGRESSO, CONCLUIDA
 }
 
 enum class IdeaType {
@@ -24,7 +24,7 @@ data class Idea(
     val type: String = IdeaType.PROBLEMA.name,
 
     @PropertyName("status")
-    val status: String = IdeaStatus.RASCUNHO.name,
+    val status: IdeaStatus = IdeaStatus.ENVIADA,
 
     @PropertyName("createdBy")
     val createdBy: String = "",
@@ -52,14 +52,5 @@ data class Idea(
 
     @PropertyName("views")
     val views: Int = 0
-) {
-    constructor() : this(
-        id = "",
-        title = "",
-        description = "",
-        type = IdeaType.PROBLEMA.name,
-        status = IdeaStatus.RASCUNHO.name,
-        createdBy = ""
-    )
-}
+)
 

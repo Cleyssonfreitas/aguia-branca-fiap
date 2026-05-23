@@ -9,11 +9,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-sealed class AuthResult<out T> {
-    data class Success<T>(val data: T) : AuthResult<T>()
-    data class Error(val exception: Exception) : AuthResult<Nothing>()
-    object Loading : AuthResult<Nothing>()
-}
+
 
 class AuthRepository(
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance(),

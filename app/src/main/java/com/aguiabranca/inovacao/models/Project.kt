@@ -3,7 +3,7 @@ package com.aguiabranca.inovacao.models
 import com.google.firebase.database.PropertyName
 
 enum class ProjectStatus {
-    PLANEJAMENTO, APROVADO, EM_PROGRESSO, PAUSADO, CONCLUIDO, CANCELADO
+    PLANEJAMENTO, APROVADO, EXECUCAO, PAUSADO, CONCLUIDO, CANCELADO
 }
 
 data class Project(
@@ -17,7 +17,7 @@ data class Project(
     val description: String = "",
 
     @PropertyName("status")
-    val status: String = ProjectStatus.PLANEJAMENTO.name,
+    val status: ProjectStatus = ProjectStatus.PLANEJAMENTO,
 
     @PropertyName("createdBy")
     val createdBy: String = "",
@@ -34,11 +34,17 @@ data class Project(
     @PropertyName("startDate")
     val startDate: Long = 0L,
 
-    @PropertyName("endDate")
-    val endDate: Long = 0L,
+    @PropertyName("deadline")
+    val deadline: String = "",
 
     @PropertyName("investment")
     val investment: Double = 0.0,
+
+    @PropertyName("expectedReturn")
+    val expectedReturn: Double = 0.0,
+
+    @PropertyName("actualReturn")
+    val actualReturn: Double = 0.0,
 
     @PropertyName("roi")
     val roi: Double = 0.0,
