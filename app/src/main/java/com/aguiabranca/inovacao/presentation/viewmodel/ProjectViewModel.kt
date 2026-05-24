@@ -3,12 +3,12 @@ package com.aguiabranca.inovacao.presentation.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aguiabranca.inovacao.models.Project
-import com.aguiabranca.inovacao.models.ProjectStatus
-import com.aguiabranca.inovacao.models.User
 import com.aguiabranca.inovacao.domain.usecase.PermissionUseCase
 import com.aguiabranca.inovacao.domain.usecase.ProjectCalculationsUseCase
 import com.aguiabranca.inovacao.domain.usecase.ValidationUseCase
+import com.aguiabranca.inovacao.models.Project
+import com.aguiabranca.inovacao.models.ProjectStatus
+import com.aguiabranca.inovacao.models.User
 import kotlinx.coroutines.launch
 
 sealed class ProjectEvent {
@@ -30,7 +30,7 @@ data class DashboardMetrics(
 class ProjectViewModel(
     private val currentUser: User?
 ) : ViewModel() {
-    
+
     val projectEvent = MutableLiveData<ProjectEvent>()
     val allProjects = MutableLiveData<List<Project>>()
     val dashboardMetrics = MutableLiveData<DashboardMetrics>()
@@ -44,104 +44,84 @@ class ProjectViewModel(
     ) {
         viewModelScope.launch {
             projectEvent.value = ProjectEvent.Loading
-            
+
             if (currentUser == null || !PermissionUseCase.canCreateProject(currentUser)) {
                 projectEvent.value = ProjectEvent.Error("Apenas gestores podem criar projetos")
                 return@launch
             }
-            
+
             if (!ValidationUseCase.validateProjectCreation(title, description, investment, expectedReturn)) {
                 projectEvent.value = ProjectEvent.Error("Preencha todos os campos corretamente")
                 return@launch
             }
-            
-            try {
-                val newProject = Project(
-                    id = "",
-                    title = title,
-                    description = description,
-                    investment = investment,
-                    expectedReturn = expectedReturn,
-                    createdBy = currentUser.uid,
-                    status = ProjectStatus.PLANEJAMENTO,
-                    deadline = deadline
-                )
-                
-                projectEvent.value = ProjectEvent.SuccessCreate("new-project-id")
-            } catch (e: Exception) {
-                projectEvent.value = ProjectEvent.Error(e.message ?: "Erro desconhecido")
-            }
+
+            val newProject = Project(
+                title = title,
+                description = description,
+                stage = "Planejamento",
+                status = ProjectStatus.PLANEJAMENTO.name,
+                owner = currentUser.uid,
+                investment = investment,
+                roi = ProjectCalculationsUseCase.calculateROI(investment, expectedReturn),
+                profit = expectedReturn
+            )
+
+            projectEvent.value = ProjectEvent.SuccessCreate(newProject.id.ifBlank { "new-project-id" })
         }
     }
 
     fun updateProjectStatus(projectId: String, newStatus: ProjectStatus) {
         viewModelScope.launch {
             if (currentUser == null || !PermissionUseCase.canEditProject(currentUser)) {
-                projectEvent.value = ProjectEvent.Error("Você não tem permissão para atualizar projetos")
+                projectEvent.value = ProjectEvent.Error("Voce nao tem permissao para atualizar projetos")
                 return@launch
             }
-            
+
             projectEvent.value = ProjectEvent.Loading
-            
-            try {
-                projectEvent.value = ProjectEvent.SuccessUpdate(projectId)
-            } catch (e: Exception) {
-                projectEvent.value = ProjectEvent.Error(e.message ?: "Erro ao atualizar")
-            }
+            projectEvent.value = ProjectEvent.SuccessUpdate(projectId)
         }
     }
 
     fun updateProjectResults(projectId: String, actualReturn: Double, actualInvestment: Double) {
         viewModelScope.launch {
             if (currentUser == null || !PermissionUseCase.canEditProject(currentUser)) {
-                projectEvent.value = ProjectEvent.Error("Você não tem permissão para atualizar resultados")
+                projectEvent.value = ProjectEvent.Error("Voce nao tem permissao para atualizar resultados")
                 return@launch
             }
-            
+
             projectEvent.value = ProjectEvent.Loading
-            
-            try {
-                projectEvent.value = ProjectEvent.SuccessUpdate(projectId)
-                calculateDashboard()
-            } catch (e: Exception) {
-                projectEvent.value = ProjectEvent.Error(e.message ?: "Erro desconhecido")
-            }
+            projectEvent.value = ProjectEvent.SuccessUpdate(projectId)
+            calculateDashboard()
         }
     }
 
     fun calculateDashboard() {
         viewModelScope.launch {
             if (currentUser == null || !PermissionUseCase.canAccessDashboard(currentUser)) {
-                projectEvent.value = ProjectEvent.Error("Você não tem acesso ao dashboard")
+                projectEvent.value = ProjectEvent.Error("Voce nao tem acesso ao dashboard")
                 return@launch
             }
-            
-            try {
-                val projects = allProjects.value ?: emptyList()
-                
-                val totalProjects = projects.size
-                val totalInvestment = projects.sumOf { it.investment }
-                val totalReturn = projects.sumOf { it.expectedReturn }
-                val totalROI = ProjectCalculationsUseCase.calculateTotalROI(totalReturn, totalInvestment)
-                val projectsInProgress = projects.count { it.status == ProjectStatus.EXECUCAO }
-                val projectsCompleted = projects.count { it.status == ProjectStatus.CONCLUIDO }
-                
-                dashboardMetrics.value = DashboardMetrics(
-                    totalProjects = totalProjects,
-                    totalInvestment = totalInvestment,
-                    totalReturn = totalReturn,
-                    totalROI = totalROI,
-                    projectsInProgress = projectsInProgress,
-                    projectsCompleted = projectsCompleted
-                )
-            } catch (e: Exception) {
-                projectEvent.value = ProjectEvent.Error(e.message ?: "Erro ao calcular dashboard")
-            }
+
+            val projects = allProjects.value ?: emptyList()
+            val totalProjects = projects.size
+            val totalInvestment = projects.sumOf { it.investment }
+            val totalReturn = projects.sumOf { it.profit }
+            val totalROI = ProjectCalculationsUseCase.calculateTotalROI(totalReturn, totalInvestment)
+            val projectsInProgress = projects.count { it.status == ProjectStatus.EM_PROGRESSO.name }
+            val projectsCompleted = projects.count { it.status == ProjectStatus.CONCLUIDO.name }
+
+            dashboardMetrics.value = DashboardMetrics(
+                totalProjects = totalProjects,
+                totalInvestment = totalInvestment,
+                totalReturn = totalReturn,
+                totalROI = totalROI,
+                projectsInProgress = projectsInProgress,
+                projectsCompleted = projectsCompleted
+            )
         }
     }
 
     fun getProjectROI(project: Project): Double {
-        return ProjectCalculationsUseCase.calculateROI(project.investment, project.expectedReturn)
+        return ProjectCalculationsUseCase.calculateROI(project.investment, project.profit)
     }
 }
-

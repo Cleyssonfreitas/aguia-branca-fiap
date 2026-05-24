@@ -1,4 +1,4 @@
-package com.aguiabranca.inovacao.ui
+package com.aguiabranca.inovacao.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
