@@ -1,31 +1,19 @@
 package com.aguiabranca.inovacao.models
 
-import com.google.firebase.database.PropertyName
-
 enum class UserRole {
-    OPERADOR, GESTOR, LIDERANCA
+    ADMIN_TI,
+    LIDERANCA,
+    GESTOR,
+    OPERADOR
 }
 
 data class User(
-    @PropertyName("uid")
     val uid: String = "",
-
-    @PropertyName("email")
     val email: String = "",
-
-    @PropertyName("name")
     val name: String = "",
-
-    @PropertyName("role")
     val role: String = UserRole.OPERADOR.name,
-
-    @PropertyName("createdAt")
     val createdAt: Long = System.currentTimeMillis(),
-
-    @PropertyName("lastLogin")
     val lastLogin: Long = 0L,
-
-    @PropertyName("isActive")
     val isActive: Boolean = true
 ) {
     constructor() : this(
@@ -34,5 +22,17 @@ data class User(
         name = "",
         role = UserRole.OPERADOR.name
     )
+}
+
+data class CurrentUser(
+    val uid: String,
+    val email: String,
+    val name: String,
+    val role: UserRole,
+    val isActive: Boolean
+)
+
+fun String.toUserRoleOrDefault(): UserRole {
+    return UserRole.entries.firstOrNull { it.name == this } ?: UserRole.OPERADOR
 }
 
