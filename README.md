@@ -4,6 +4,12 @@ App mobile para gestão de inovação corporativa desenvolvido para o Challenge 
 
 ---
 
+## Firebase local config
+
+O arquivo real `app/google-services.json` nao deve ser versionado. Para configurar o projeto localmente, copie `app/google-services.example.json` para `app/google-services.json` e preencha os valores gerados no Firebase Console.
+
+---
+
 # Data Layer - Arquitetura de Dados e Comunicação
 
 Este módulo contém a implementação da camada de dados do aplicativo, incluindo autenticação com Firebase Auth, persistência em tempo real com Firebase Realtime Database e comunicação HTTP com APIs externas via Retrofit.
@@ -43,7 +49,7 @@ app/src/main/java/com/aguiabranca/inovacao/
 val authRepo = AuthRepository()
 
 // Realizar Login
-when (val result = authRepo.signIn("user@email.com", "password123")) {
+when (val result = authRepo.signIn("user@email.com", "<senha>")) {
     is AuthResult.Success -> {
         val user = result.data
         println("Logado como: ${user.name} | Cargo: ${user.role}")

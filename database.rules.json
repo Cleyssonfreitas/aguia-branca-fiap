@@ -1,0 +1,41 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "users": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid == $uid || root.child('users').child(auth.uid).child('role').val() == 'ADMIN_TI')",
+        ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() == 'ADMIN_TI' || (auth.uid == $uid && !data.exists() && root.child('pendingUsers').child(auth.token.email.replace('.', ',').toLowerCase()).exists() && newData.child('uid').val() == auth.uid && newData.child('email').val() == auth.token.email && newData.child('role').val() == root.child('pendingUsers').child(auth.token.email.replace('.', ',').toLowerCase()).child('role').val() && newData.child('isActive').val() == true))"
+      }
+    },
+    "pendingUsers": {
+      "$emailKey": {
+        ".read": "auth != null && (root.child('users').child(auth.uid).child('role').val() == 'ADMIN_TI' || auth.token.email.replace('.', ',').toLowerCase() == $emailKey)",
+        ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() == 'ADMIN_TI'"
+      }
+    },
+    "strategies": {
+      ".read": "auth != null && root.child('users').child(auth.uid).child('isActive').val() == true",
+      "$strategyId": {
+        ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() == 'LIDERANCA'"
+      }
+    },
+    "ideas": {
+      ".read": "auth != null && (root.child('users').child(auth.uid).child('role').val() == 'GESTOR' || root.child('users').child(auth.uid).child('role').val() == 'ADMIN_TI')",
+      "$ideaId": {
+        ".read": "auth != null && (data.child('createdBy').val() == auth.uid || root.child('users').child(auth.uid).child('role').val() == 'GESTOR' || root.child('users').child(auth.uid).child('role').val() == 'ADMIN_TI')",
+        ".write": "auth != null && ((!data.exists() && newData.child('createdBy').val() == auth.uid && root.child('users').child(auth.uid).child('role').val() == 'OPERADOR') || root.child('users').child(auth.uid).child('role').val() == 'GESTOR')"
+      }
+    },
+    "projects": {
+      ".read": "auth != null && (root.child('users').child(auth.uid).child('role').val() == 'GESTOR' || root.child('users').child(auth.uid).child('role').val() == 'LIDERANCA' || root.child('users').child(auth.uid).child('role').val() == 'ADMIN_TI')",
+      "$projectId": {
+        ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() == 'GESTOR'"
+      }
+    },
+    "auditLogs": {
+      ".read": "auth != null && root.child('users').child(auth.uid).child('role').val() == 'ADMIN_TI'",
+      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() == 'ADMIN_TI'"
+    }
+  }
+}

@@ -1,0 +1,26 @@
+package com.aguiabranca.inovacao.di
+
+import android.content.Context
+import com.aguiabranca.inovacao.data.repository.createFirebaseRepositoryBundle
+import com.aguiabranca.inovacao.domain.repository.AuthRepository
+import com.aguiabranca.inovacao.domain.repository.DashboardRepository
+import com.aguiabranca.inovacao.domain.repository.IdeaRepository
+import com.aguiabranca.inovacao.domain.repository.ProjectRepository
+import com.aguiabranca.inovacao.domain.repository.StrategyRepository
+import com.aguiabranca.inovacao.domain.repository.UserRepository
+
+class AppContainer(context: Context) {
+    private val repositories = createFirebaseRepositoryBundle(context)
+
+    val authRepository: AuthRepository = repositories.authRepository
+
+    val userRepository: UserRepository = repositories.userRepository
+
+    val strategyRepository: StrategyRepository = repositories.strategyRepository
+
+    val ideaRepository: IdeaRepository = repositories.ideaRepository
+
+    val projectRepository: ProjectRepository = repositories.projectRepository
+
+    val dashboardRepository: DashboardRepository = repositories.dashboardRepository
+}
