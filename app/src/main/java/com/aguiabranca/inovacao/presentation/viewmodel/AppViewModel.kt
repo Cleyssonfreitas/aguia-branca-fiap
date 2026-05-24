@@ -195,9 +195,9 @@ class AppViewModel(
         }
     }
 
-    fun rejectIdea(id: String) {
+    fun rejectIdea(id: String, reason: String = "Rejeitada pelo gestor.") {
         viewModelScope.launch {
-            handleMutation(ideaRepository.reviewIdea(ReviewIdeaRequest(ideaId = id, approved = false, rejectionReason = "Rejeitada pelo gestor.")), "Ideia rejeitada.") {
+            handleMutation(ideaRepository.reviewIdea(ReviewIdeaRequest(ideaId = id, approved = false, rejectionReason = reason)), "Ideia rejeitada.") {
                 loadIdeasForReview()
             }
         }
@@ -220,6 +220,39 @@ class AppViewModel(
                     )
                 ),
                 "Projeto salvo."
+            ) { loadProjects() }
+        }
+    }
+
+    fun updateProject(
+        id: String,
+        title: String,
+        description: String,
+        stage: String,
+        status: String,
+        investment: Double,
+        profit: Double,
+        progress: Int,
+        relatedIdeas: List<String> = emptyList()
+    ) {
+        viewModelScope.launch {
+            handleMutation(
+                projectRepository.saveProject(
+                    SaveProjectRequest(
+                        id = id,
+                        title = title.trim(),
+                        description = description.trim(),
+                        stage = stage,
+                        status = status,
+                        owner = _uiState.value.currentUser?.uid.orEmpty(),
+                        investment = investment,
+                        profit = profit,
+                        roi = if (investment > 0) ((profit - investment) / investment) * 100 else 0.0,
+                        progress = progress,
+                        relatedIdeas = relatedIdeas
+                    )
+                ),
+                "Projeto atualizado."
             ) { loadProjects() }
         }
     }
