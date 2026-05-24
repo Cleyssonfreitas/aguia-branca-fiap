@@ -18,8 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.aguiabranca.inovacao.presentation.components.Message
-import com.aguiabranca.inovacao.domain.models.Idea
-import com.aguiabranca.inovacao.domain.models.Project
 import com.aguiabranca.inovacao.domain.models.UserRole
 import com.aguiabranca.inovacao.presentation.components.AdminSection
 import com.aguiabranca.inovacao.presentation.components.DashboardSection
@@ -46,9 +44,7 @@ fun HomeScreen(
     onApproveIdea: (String) -> Unit,
     onRejectIdea: (String) -> Unit,
     onSaveProject: (String, String, Double, Double, Int) -> Unit,
-    onRefresh: () -> Unit,
-    onSelectIdea: (Idea) -> Unit,
-    onSelectProject: (Project) -> Unit
+    onRefresh: () -> Unit
 ) {
     val user = state.currentUser ?: return
 
@@ -82,23 +78,22 @@ fun HomeScreen(
         when (user.role) {
             UserRole.ADMIN_TI -> {
                 AdminSection(state.users, onCreateUser, onUpdateRole, onSetActive)
-                ProjectListSection("Projetos para suporte", state.projects, onSelectProject)
+                ProjectListSection("Projetos para suporte", state.projects)
                 DashboardSection(state)
             }
             UserRole.LIDERANCA -> {
-                ProjectListSection("Andamento dos projetos", state.projects, onSelectProject)
+                ProjectListSection("Andamento dos projetos", state.projects)
                 DashboardSection(state)
             }
             UserRole.GESTOR -> {
-                ReviewIdeasSection(state.reviewIdeas, onPrioritizeIdea, onApproveIdea, onRejectIdea, onSelectIdea)
+                ReviewIdeasSection(state.reviewIdeas, onPrioritizeIdea, onApproveIdea, onRejectIdea)
                 ProjectFormSection(onSaveProject)
-                ProjectListSection("Projetos", state.projects, onSelectProject)
+                ProjectListSection("Projetos", state.projects)
             }
             UserRole.OPERADOR -> {
                 IdeaFormSection(onCreateIdea)
-                IdeaListSection("Minhas ideias", state.myIdeas, onSelectIdea)
+                IdeaListSection("Minhas ideias", state.myIdeas)
             }
         }
     }
 }
-

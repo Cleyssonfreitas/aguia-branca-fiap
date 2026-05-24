@@ -3,13 +3,8 @@ package com.aguiabranca.inovacao.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.mutableStateOf
-import com.aguiabranca.inovacao.presentation.screens.Home.HomeScreen
-import com.aguiabranca.inovacao.presentation.screens.Login.LoginScreen
-import com.aguiabranca.inovacao.presentation.screens.Detail.IdeaDetailScreen
-import com.aguiabranca.inovacao.presentation.screens.Detail.ProjectDetailScreen
+import com.aguiabranca.inovacao.presentation.screens.home.HomeScreen
+import com.aguiabranca.inovacao.presentation.screens.login.LoginScreen
 import com.aguiabranca.inovacao.presentation.viewmodel.AppViewModel
 import com.aguiabranca.inovacao.domain.models.Idea
 import com.aguiabranca.inovacao.domain.models.Project
