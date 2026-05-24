@@ -154,11 +154,12 @@ fun ReviewIdeasSection(
     ideas: List<Idea>,
     onPrioritize: (String, Int) -> Unit,
     onApprove: (String) -> Unit,
-    onReject: (String) -> Unit
+    onReject: (String) -> Unit,
+    onSelectIdea: (Idea) -> Unit
 ) {
     Section("Ideias para avaliação") {
         ideas.forEach { idea ->
-            ItemCard {
+            ItemCard(onClick = { onSelectIdea(idea) }) {
                 Text(idea.title, style = MaterialTheme.typography.titleMedium)
                 Text(idea.description)
                 Text("${idea.status} | Prioridade ${idea.priority}")
@@ -203,10 +204,10 @@ fun ProjectFormSection(onSaveProject: (String, String, Double, Double, Int) -> U
 }
 
 @Composable
-fun IdeaListSection(title: String, ideas: List<Idea>) {
+fun IdeaListSection(title: String, ideas: List<Idea>, onSelectIdea: (Idea) -> Unit) {
     Section(title) {
         ideas.forEach { idea ->
-            ItemCard {
+            ItemCard(onClick = { onSelectIdea(idea) }) {
                 Text(idea.title, style = MaterialTheme.typography.titleMedium)
                 Text(idea.description)
                 Text("${idea.status} | ${idea.department}")
@@ -216,10 +217,10 @@ fun IdeaListSection(title: String, ideas: List<Idea>) {
 }
 
 @Composable
-fun ProjectListSection(title: String, projects: List<Project>) {
+fun ProjectListSection(title: String, projects: List<Project>, onSelectProject: (Project) -> Unit) {
     Section(title) {
         projects.forEach { project ->
-            ItemCard {
+            ItemCard(onClick = { onSelectProject(project) }) {
                 Text(project.title, style = MaterialTheme.typography.titleMedium)
                 Text("${project.stage} | ${project.status} | ${project.progress}%")
                 Text("Investimento: R$ ${project.investment.formatMoney()} | ROI: ${project.roi.formatPercent()}")
