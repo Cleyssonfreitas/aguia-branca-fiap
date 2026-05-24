@@ -1,7 +1,7 @@
 package com.aguiabranca.inovacao.domain.usecase
 
-import com.aguiabranca.inovacao.models.User
-import com.aguiabranca.inovacao.models.UserRole
+import com.aguiabranca.inovacao.domain.models.User
+import com.aguiabranca.inovacao.domain.models.UserRole
 
 object PermissionUseCase {
     

@@ -1,6 +1,6 @@
 package com.aguiabranca.inovacao.utils
 
-import com.aguiabranca.inovacao.models.UserRole
+import com.aguiabranca.inovacao.domain.models.UserRole
 
 fun String.toRole(): UserRole = UserRole.entries.firstOrNull { it.name == this } ?: UserRole.OPERADOR
 

@@ -6,9 +6,9 @@ import com.aguiabranca.inovacao.data.local.toModel
 import com.aguiabranca.inovacao.domain.AppResult
 import com.aguiabranca.inovacao.domain.LoginRequest
 import com.aguiabranca.inovacao.domain.repository.AuthRepository
-import com.aguiabranca.inovacao.models.CurrentUser
-import com.aguiabranca.inovacao.models.User
-import com.aguiabranca.inovacao.models.toUserRoleOrDefault
+import com.aguiabranca.inovacao.domain.models.CurrentUser
+import com.aguiabranca.inovacao.domain.models.User
+import com.aguiabranca.inovacao.domain.models.toUserRoleOrDefault
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.tasks.await

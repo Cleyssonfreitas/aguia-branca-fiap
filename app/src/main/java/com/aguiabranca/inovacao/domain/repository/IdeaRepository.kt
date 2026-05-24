@@ -3,7 +3,7 @@ package com.aguiabranca.inovacao.domain.repository
 import com.aguiabranca.inovacao.domain.AppResult
 import com.aguiabranca.inovacao.domain.CreateIdeaRequest
 import com.aguiabranca.inovacao.domain.ReviewIdeaRequest
-import com.aguiabranca.inovacao.models.Idea
+import com.aguiabranca.inovacao.domain.models.Idea
 
 interface IdeaRepository {
     suspend fun createIdea(request: CreateIdeaRequest): AppResult<Idea>

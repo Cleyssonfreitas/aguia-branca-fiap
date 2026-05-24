@@ -1,7 +1,7 @@
 package com.aguiabranca.inovacao.domain
 
-import com.aguiabranca.inovacao.models.CurrentUser
-import com.aguiabranca.inovacao.models.UserRole
+import com.aguiabranca.inovacao.domain.models.CurrentUser
+import com.aguiabranca.inovacao.domain.models.UserRole
 
 object Permissions {
     fun canManageUsers(user: CurrentUser?) = user.hasRole(UserRole.ADMIN_TI)

@@ -6,10 +6,10 @@ import com.aguiabranca.inovacao.data.local.entity.ProjectEntity
 import com.aguiabranca.inovacao.data.local.entity.StrategyEntity
 import com.aguiabranca.inovacao.data.local.entity.UserProfileEntity
 import com.aguiabranca.inovacao.domain.DashboardSummary
-import com.aguiabranca.inovacao.models.Idea
-import com.aguiabranca.inovacao.models.Project
-import com.aguiabranca.inovacao.models.Strategy
-import com.aguiabranca.inovacao.models.User
+import com.aguiabranca.inovacao.domain.models.Idea
+import com.aguiabranca.inovacao.domain.models.Project
+import com.aguiabranca.inovacao.domain.models.Strategy
+import com.aguiabranca.inovacao.domain.models.User
 
 fun User.toEntity() = UserProfileEntity(uid, email, name, role, createdAt, lastLogin, isActive)
 fun UserProfileEntity.toModel() = User(uid, email, name, role, createdAt, lastLogin, isActive)

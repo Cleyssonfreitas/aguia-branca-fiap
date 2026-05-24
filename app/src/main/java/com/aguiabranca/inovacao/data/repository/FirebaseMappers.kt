@@ -1,9 +1,9 @@
 package com.aguiabranca.inovacao.data.repository
 
-import com.aguiabranca.inovacao.models.Idea
-import com.aguiabranca.inovacao.models.Project
-import com.aguiabranca.inovacao.models.Strategy
-import com.aguiabranca.inovacao.models.User
+import com.aguiabranca.inovacao.domain.models.Idea
+import com.aguiabranca.inovacao.domain.models.Project
+import com.aguiabranca.inovacao.domain.models.Strategy
+import com.aguiabranca.inovacao.domain.models.User
 import com.aguiabranca.inovacao.domain.DashboardSummary
 
 internal fun Map<*, *>.toUser(): User {

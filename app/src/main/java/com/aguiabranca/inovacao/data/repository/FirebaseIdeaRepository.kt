@@ -9,11 +9,11 @@ import com.aguiabranca.inovacao.domain.AppResult
 import com.aguiabranca.inovacao.domain.CreateIdeaRequest
 import com.aguiabranca.inovacao.domain.ReviewIdeaRequest
 import com.aguiabranca.inovacao.domain.repository.IdeaRepository
-import com.aguiabranca.inovacao.models.Idea
-import com.aguiabranca.inovacao.models.IdeaStatus
-import com.aguiabranca.inovacao.models.User
-import com.aguiabranca.inovacao.models.UserRole
-import com.aguiabranca.inovacao.models.toUserRoleOrDefault
+import com.aguiabranca.inovacao.domain.models.Idea
+import com.aguiabranca.inovacao.domain.models.IdeaStatus
+import com.aguiabranca.inovacao.domain.models.User
+import com.aguiabranca.inovacao.domain.models.UserRole
+import com.aguiabranca.inovacao.domain.models.toUserRoleOrDefault
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.gson.Gson

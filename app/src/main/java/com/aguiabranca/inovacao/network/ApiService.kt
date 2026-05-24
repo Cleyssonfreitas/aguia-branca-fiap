@@ -1,8 +1,8 @@
 package com.aguiabranca.inovacao.network
 
-import com.aguiabranca.inovacao.models.Idea
-import com.aguiabranca.inovacao.models.Project
-import com.aguiabranca.inovacao.models.Strategy
+import com.aguiabranca.inovacao.domain.models.Idea
+import com.aguiabranca.inovacao.domain.models.Project
+import com.aguiabranca.inovacao.domain.models.Strategy
 import retrofit2.http.*
 
 

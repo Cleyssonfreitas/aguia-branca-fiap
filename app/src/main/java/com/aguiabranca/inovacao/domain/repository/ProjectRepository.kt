@@ -2,7 +2,7 @@ package com.aguiabranca.inovacao.domain.repository
 
 import com.aguiabranca.inovacao.domain.AppResult
 import com.aguiabranca.inovacao.domain.SaveProjectRequest
-import com.aguiabranca.inovacao.models.Project
+import com.aguiabranca.inovacao.domain.models.Project
 
 interface ProjectRepository {
     suspend fun listProjects(): AppResult<List<Project>>

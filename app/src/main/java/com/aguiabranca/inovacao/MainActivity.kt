@@ -10,8 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
 import com.aguiabranca.inovacao.di.AppContainer
 import com.aguiabranca.inovacao.navigation.AppContent
-import com.aguiabranca.inovacao.ui.theme.AguiaBrancaInovacaoTheme
-import com.aguiabranca.inovacao.viewmodel.AppViewModel
+import com.aguiabranca.inovacao.presentation.theme.AguiaBrancaInovacaoTheme
+import com.aguiabranca.inovacao.presentation.viewmodel.AppViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

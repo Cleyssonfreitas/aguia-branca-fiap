@@ -1,6 +1,6 @@
 package com.aguiabranca.inovacao.domain
 
-import com.aguiabranca.inovacao.models.UserRole
+import com.aguiabranca.inovacao.domain.models.UserRole
 
 data class LoginRequest(
     val email: String,

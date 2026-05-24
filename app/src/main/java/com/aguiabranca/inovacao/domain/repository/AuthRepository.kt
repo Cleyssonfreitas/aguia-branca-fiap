@@ -2,7 +2,7 @@ package com.aguiabranca.inovacao.domain.repository
 
 import com.aguiabranca.inovacao.domain.AppResult
 import com.aguiabranca.inovacao.domain.LoginRequest
-import com.aguiabranca.inovacao.models.CurrentUser
+import com.aguiabranca.inovacao.domain.models.CurrentUser
 
 interface AuthRepository {
     suspend fun signIn(request: LoginRequest): AppResult<CurrentUser>
