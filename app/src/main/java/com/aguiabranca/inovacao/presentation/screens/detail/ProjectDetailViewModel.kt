@@ -32,6 +32,7 @@ class ProjectDetailViewModel(
             handleMutation(
                 projectRepository.saveProject(
                     SaveProjectRequest(
+                        id = id,
                         title = title.trim(),
                         description = description.trim(),
                         stage = stage,
