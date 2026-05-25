@@ -12,6 +12,7 @@ data class User(
     val email: String = "",
     val name: String = "",
     val role: String = UserRole.OPERADOR.name,
+    val profilePictureUrl: String? = null,
     val createdAt: Long = System.currentTimeMillis(),
     val lastLogin: Long = 0L,
     val isActive: Boolean = true
@@ -20,7 +21,8 @@ data class User(
         uid = "",
         email = "",
         name = "",
-        role = UserRole.OPERADOR.name
+        role = UserRole.OPERADOR.name,
+        profilePictureUrl = null
     )
 }
 
@@ -29,6 +31,7 @@ data class CurrentUser(
     val email: String,
     val name: String,
     val role: UserRole,
+    val profilePictureUrl: String?,
     val isActive: Boolean
 )
 

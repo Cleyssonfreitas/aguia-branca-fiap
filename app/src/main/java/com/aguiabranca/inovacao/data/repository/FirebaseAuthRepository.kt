@@ -9,6 +9,7 @@ import com.aguiabranca.inovacao.domain.repository.AuthRepository
 import com.aguiabranca.inovacao.domain.models.CurrentUser
 import com.aguiabranca.inovacao.domain.models.User
 import com.aguiabranca.inovacao.domain.models.toUserRoleOrDefault
+import com.aguiabranca.inovacao.BuildConfig
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.tasks.await
@@ -24,7 +25,21 @@ class FirebaseAuthRepository(
         return try {
             val authResult = firebaseAuth.signInWithEmailAndPassword(request.email, request.password).await()
             val uid = authResult.user?.uid.orEmpty()
-            val user = fetchUser(uid)
+            val user = try {
+                fetchUser(uid)
+            } catch (e: Exception) {
+                // Recover dangling accounts from a previously failed database insertion
+                val pendingSnapshot = firebaseDb.reference.child("pendingUsers").child(request.email.safeEmailKey()).get().await()
+                val pendingUser = pendingSnapshot.getValue(User::class.java)
+                if (pendingUser != null) {
+                    val recoveredUser = pendingUser.copy(uid = uid, email = request.email.trim().lowercase(), createdAt = System.currentTimeMillis())
+                    usersRef.child(uid).setValue(recoveredUser).await()
+                    runCatching { pendingSnapshot.ref.removeValue().await() }
+                    recoveredUser
+                } else {
+                    throw e
+                }
+            }
             if (!user.isActive) {
                 firebaseAuth.signOut()
                 return AppResult.Error("Usuário inativo. Procure o Administrador de TI.")
@@ -38,12 +53,16 @@ class FirebaseAuthRepository(
 
     override suspend fun completeFirstAccess(request: LoginRequest): AppResult<CurrentUser> {
         return try {
+            if (request.password != BuildConfig.DEFAULT_PASSWORD) {
+                return AppResult.Error("Para o primeiro acesso, utilize a senha padrão (${BuildConfig.DEFAULT_PASSWORD}).")
+            }
+
             val authResult = firebaseAuth.createUserWithEmailAndPassword(request.email, request.password).await()
             val uid = authResult.user?.uid.orEmpty()
             val pendingSnapshot = firebaseDb.reference.child("pendingUsers").child(request.email.safeEmailKey()).get().await()
             val pendingUser = pendingSnapshot.getValue(User::class.java)
                 ?: return AppResult.Error("Usuário não autorizado. Peça ao Administrador de TI para liberar seu e-mail.")
-            val user = pendingUser.copy(uid = uid, email = request.email, createdAt = System.currentTimeMillis())
+            val user = pendingUser.copy(uid = uid, email = request.email.trim().lowercase(), createdAt = System.currentTimeMillis())
             usersRef.child(uid).setValue(user).await()
             runCatching { pendingSnapshot.ref.removeValue().await() }
             userDao.upsert(user.toEntity())
@@ -85,6 +104,7 @@ private fun User.toCurrentUser(): CurrentUser {
         email = email,
         name = name,
         role = role.toUserRoleOrDefault(),
+        profilePictureUrl = profilePictureUrl,
         isActive = isActive
     )
 }

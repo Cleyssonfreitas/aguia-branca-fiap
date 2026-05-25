@@ -11,5 +11,7 @@ interface UserRepository {
     suspend fun listUsers(): AppResult<List<User>>
     suspend fun updateUserRole(request: UpdateUserRoleRequest): AppResult<User>
     suspend fun setUserActive(request: SetUserActiveRequest): AppResult<User>
+    suspend fun updateProfilePicture(base64String: String): AppResult<String>
+    suspend fun deleteProfilePicture(): AppResult<Unit>
 }
 

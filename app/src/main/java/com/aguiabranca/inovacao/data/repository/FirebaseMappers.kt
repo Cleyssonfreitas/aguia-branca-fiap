@@ -12,6 +12,7 @@ internal fun Map<*, *>.toUser(): User {
         email = readString("email"),
         name = readString("name"),
         role = readString("role", "OPERADOR"),
+        profilePictureUrl = readNullableString("profilePictureUrl"),
         createdAt = readLong("createdAt"),
         lastLogin = readLong("lastLogin"),
         isActive = readBoolean("isActive", true)

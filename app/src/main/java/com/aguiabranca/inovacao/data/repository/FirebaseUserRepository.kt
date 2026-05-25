@@ -87,6 +87,44 @@ class FirebaseUserRepository(
         }
     }
 
+    override suspend fun updateProfilePicture(base64String: String): AppResult<String> {
+        return try {
+            val uid = firebaseAuth.currentUser?.uid ?: error("Usuário não autenticado.")
+            val userRef = usersRef.child(uid)
+            val current = userRef.get().await().getValue(User::class.java) ?: error("Perfil não encontrado.")
+            
+            // Update only profilePictureUrl in Firebase
+            userRef.child("profilePictureUrl").setValue(base64String).await()
+            
+            // Update local database
+            val updated = current.copy(profilePictureUrl = base64String)
+            userDao.upsert(updated.toEntity())
+            
+            AppResult.Success(base64String)
+        } catch (e: Exception) {
+            AppResult.Error(e.message ?: "Não foi possível atualizar a foto.", e)
+        }
+    }
+
+    override suspend fun deleteProfilePicture(): AppResult<Unit> {
+        return try {
+            val uid = firebaseAuth.currentUser?.uid ?: error("Usuário não autenticado.")
+            val userRef = usersRef.child(uid)
+            val current = userRef.get().await().getValue(User::class.java) ?: error("Perfil não encontrado.")
+            
+            // Remove only profilePictureUrl in Firebase
+            userRef.child("profilePictureUrl").removeValue().await()
+            
+            // Update local database
+            val updated = current.copy(profilePictureUrl = null)
+            userDao.upsert(updated.toEntity())
+            
+            AppResult.Success(Unit)
+        } catch (e: Exception) {
+            AppResult.Error(e.message ?: "Não foi possível remover a foto.", e)
+        }
+    }
+
     private suspend fun requireAdmin() {
         val uid = firebaseAuth.currentUser?.uid ?: error("Usuário não autenticado.")
         val user = usersRef.child(uid).get().await().getValue(User::class.java)
@@ -96,4 +134,3 @@ class FirebaseUserRepository(
         }
     }
 }
-

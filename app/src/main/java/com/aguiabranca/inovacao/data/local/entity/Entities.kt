@@ -9,6 +9,7 @@ data class UserProfileEntity(
     val email: String,
     val name: String,
     val role: String,
+    val profilePictureUrl: String?,
     val createdAt: Long,
     val lastLogin: Long,
     val isActive: Boolean,

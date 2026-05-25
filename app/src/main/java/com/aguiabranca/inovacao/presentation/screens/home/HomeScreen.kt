@@ -18,6 +18,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.aguiabranca.inovacao.presentation.components.Message
+import com.aguiabranca.inovacao.domain.models.Idea
+import com.aguiabranca.inovacao.domain.models.Project
+import com.aguiabranca.inovacao.domain.models.CurrentUser
 import com.aguiabranca.inovacao.domain.models.UserRole
 import com.aguiabranca.inovacao.presentation.components.AdminSection
 import com.aguiabranca.inovacao.presentation.components.DashboardSection
@@ -27,11 +30,11 @@ import com.aguiabranca.inovacao.presentation.components.ProjectFormSection
 import com.aguiabranca.inovacao.presentation.components.ProjectListSection
 import com.aguiabranca.inovacao.presentation.components.ReviewIdeasSection
 import com.aguiabranca.inovacao.presentation.components.StrategySection
-import com.aguiabranca.inovacao.presentation.viewmodel.AppUiState
 
 @Composable
 fun HomeScreen(
-    state: AppUiState,
+    state: HomeUiState,
+    currentUser: CurrentUser,
     onLogout: () -> Unit,
     onDismiss: () -> Unit,
     onCreateUser: (String, String, String, UserRole) -> Unit,
@@ -44,9 +47,11 @@ fun HomeScreen(
     onApproveIdea: (String) -> Unit,
     onRejectIdea: (String) -> Unit,
     onSaveProject: (String, String, Double, Double, Int) -> Unit,
-    onRefresh: () -> Unit
+    onRefresh: () -> Unit,
+    onSelectIdea: (Idea) -> Unit,
+    onSelectProject: (Project) -> Unit
 ) {
-    val user = state.currentUser ?: return
+    val user = currentUser
 
     Column(
         modifier = Modifier
@@ -78,21 +83,21 @@ fun HomeScreen(
         when (user.role) {
             UserRole.ADMIN_TI -> {
                 AdminSection(state.users, onCreateUser, onUpdateRole, onSetActive)
-                ProjectListSection("Projetos para suporte", state.projects)
+                ProjectListSection("Projetos para suporte", state.projects, onSelectProject)
                 DashboardSection(state)
             }
             UserRole.LIDERANCA -> {
-                ProjectListSection("Andamento dos projetos", state.projects)
+                ProjectListSection("Andamento dos projetos", state.projects, onSelectProject)
                 DashboardSection(state)
             }
             UserRole.GESTOR -> {
-                ReviewIdeasSection(state.reviewIdeas, onPrioritizeIdea, onApproveIdea, onRejectIdea)
+                ReviewIdeasSection(state.reviewIdeas, onPrioritizeIdea, onApproveIdea, onRejectIdea, onSelectIdea)
                 ProjectFormSection(onSaveProject)
-                ProjectListSection("Projetos", state.projects)
+                ProjectListSection("Projetos", state.projects, onSelectProject)
             }
             UserRole.OPERADOR -> {
                 IdeaFormSection(onCreateIdea)
-                IdeaListSection("Minhas ideias", state.myIdeas)
+                IdeaListSection("Minhas ideias", state.myIdeas, onSelectIdea)
             }
         }
     }

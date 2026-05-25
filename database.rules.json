@@ -5,7 +5,10 @@
     "users": {
       "$uid": {
         ".read": "auth != null && (auth.uid == $uid || root.child('users').child(auth.uid).child('role').val() == 'ADMIN_TI')",
-        ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() == 'ADMIN_TI' || (auth.uid == $uid && !data.exists() && root.child('pendingUsers').child(auth.token.email.replace('.', ',').toLowerCase()).exists() && newData.child('uid').val() == auth.uid && newData.child('email').val() == auth.token.email && newData.child('role').val() == root.child('pendingUsers').child(auth.token.email.replace('.', ',').toLowerCase()).child('role').val() && newData.child('isActive').val() == true))"
+        ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() == 'ADMIN_TI' || (auth.uid == $uid && !data.exists() && root.child('pendingUsers').child(newData.child('email').val().replace('.', ',')).exists() && newData.child('role').val() == root.child('pendingUsers').child(newData.child('email').val().replace('.', ',')).child('role').val() && newData.child('active').val() == true))",
+        "profilePictureUrl": {
+          ".write": "auth != null && auth.uid == $uid"
+        }
       }
     },
     "pendingUsers": {
@@ -15,7 +18,7 @@
       }
     },
     "strategies": {
-      ".read": "auth != null && root.child('users').child(auth.uid).child('isActive').val() == true",
+      ".read": "auth != null && root.child('users').child(auth.uid).child('active').val() == true",
       "$strategyId": {
         ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() == 'LIDERANCA'"
       }

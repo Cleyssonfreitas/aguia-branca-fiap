@@ -11,8 +11,8 @@ import com.aguiabranca.inovacao.domain.models.Project
 import com.aguiabranca.inovacao.domain.models.Strategy
 import com.aguiabranca.inovacao.domain.models.User
 
-fun User.toEntity() = UserProfileEntity(uid, email, name, role, createdAt, lastLogin, isActive)
-fun UserProfileEntity.toModel() = User(uid, email, name, role, createdAt, lastLogin, isActive)
+fun User.toEntity() = UserProfileEntity(uid, email, name, role, profilePictureUrl, createdAt, lastLogin, isActive)
+fun UserProfileEntity.toModel() = User(uid, email, name, role, profilePictureUrl, createdAt, lastLogin, isActive)
 
 fun Strategy.toEntity() = StrategyEntity(id, title, description, createdBy, createdAt, updatedAt, isActive, priority)
 fun StrategyEntity.toModel() = Strategy(remoteId, title, description, createdBy, createdAt, updatedAt, isActive, priority)

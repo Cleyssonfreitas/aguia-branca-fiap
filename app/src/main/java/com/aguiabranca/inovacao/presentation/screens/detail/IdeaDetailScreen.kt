@@ -1,4 +1,4 @@
-package com.aguiabranca.inovacao.presentation.screens.Detail
+package com.aguiabranca.inovacao.presentation.screens.detail
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState

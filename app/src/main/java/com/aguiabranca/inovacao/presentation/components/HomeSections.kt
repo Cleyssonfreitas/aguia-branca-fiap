@@ -22,12 +22,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.aguiabranca.inovacao.BuildConfig
 import com.aguiabranca.inovacao.domain.models.Idea
 import com.aguiabranca.inovacao.domain.models.Project
 import com.aguiabranca.inovacao.domain.models.Strategy
 import com.aguiabranca.inovacao.domain.models.User
 import com.aguiabranca.inovacao.domain.models.UserRole
-import com.aguiabranca.inovacao.presentation.viewmodel.AppUiState
+import com.aguiabranca.inovacao.presentation.screens.home.HomeUiState
 import com.aguiabranca.inovacao.utils.formatMoney
 import com.aguiabranca.inovacao.utils.formatPercent
 import com.aguiabranca.inovacao.utils.toRole
@@ -57,6 +58,7 @@ fun AdminSection(
         ) {
             Text("Liberar usuário")
         }
+        Text("Atenção: A senha padrão para o primeiro acesso é ${BuildConfig.DEFAULT_PASSWORD}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
         Divider()
         users.forEach { user ->
             ItemCard {
@@ -231,7 +233,7 @@ fun ProjectListSection(title: String, projects: List<Project>, onSelectProject: 
 }
 
 @Composable
-fun DashboardSection(state: AppUiState) {
+fun DashboardSection(state: HomeUiState) {
     Section("Dashboard") {
         val dashboard = state.dashboard
         Text("Projetos: ${dashboard.projectCount}")

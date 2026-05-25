@@ -9,7 +9,10 @@ import com.aguiabranca.inovacao.domain.repository.ProjectRepository
 import com.aguiabranca.inovacao.domain.repository.StrategyRepository
 import com.aguiabranca.inovacao.domain.repository.UserRepository
 
-class AppContainer(context: Context) {
+import com.aguiabranca.inovacao.data.local.datastore.SessionManager
+
+class AppContainer(val context: Context) {
+    val sessionManager = SessionManager(context)
     private val repositories = createFirebaseRepositoryBundle(context)
 
     val authRepository: AuthRepository = repositories.authRepository

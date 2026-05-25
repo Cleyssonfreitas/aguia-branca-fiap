@@ -46,11 +46,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aguiabranca.inovacao.R
 import com.aguiabranca.inovacao.presentation.components.Message
-import com.aguiabranca.inovacao.presentation.viewmodel.AppUiState
+import com.aguiabranca.inovacao.presentation.components.ModernTextField
 
 @Composable
 fun LoginScreen(
-    state: AppUiState,
+    state: AuthUiState,
     onLogin: (String, String) -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -96,25 +96,22 @@ fun LoginScreen(
                 textAlign = TextAlign.Center
             )
 
-            OutlinedTextField(
+            ModernTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("E-mail") },
+                label = "E-mail",
                 leadingIcon = {
                     Icon(imageVector = Icons.Default.Email, contentDescription = "Ícone de E-mail")
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                shape = RoundedCornerShape(12.dp),
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            OutlinedTextField(
+            ModernTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Senha") },
+                label = "Senha",
                 leadingIcon = {
                     Icon(imageVector = Icons.Default.Lock, contentDescription = "Ícone de Senha")
                 },
@@ -130,9 +127,6 @@ fun LoginScreen(
                 },
                 visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                shape = RoundedCornerShape(12.dp),
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true
             )
 
             Spacer(modifier = Modifier.height(32.dp))
