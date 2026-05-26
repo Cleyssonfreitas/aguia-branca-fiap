@@ -1,144 +1,27 @@
-# Águia Branca Inovação
+# Desafio Grupo Águia Branca - Inovação Corporativa
 
-App mobile para gestão de inovação corporativa desenvolvido para o Challenge do Grupo Águia Branca (Sprint 1).
-
----
-
-## Firebase local config
-
-O arquivo real `app/google-services.json` nao deve ser versionado. Para configurar o projeto localmente, copie `app/google-services.example.json` para `app/google-services.json` e preencha os valores gerados no Firebase Console.
+Este aplicativo foi desenvolvido para a Sprint 1 do Challenge. O objetivo do app é conectar os colaboradores da Águia Branca para sugerir ideias de inovação, permitir que gestores priorizem essas ideias transformando-as em projetos, e que a liderança acompanhe os resultados gerais do negócio.
 
 ---
 
-# Data Layer - Arquitetura de Dados e Comunicação
+## 👥 Como testar o aplicativo (Credenciais inclusas)
 
-Este módulo contém a implementação da camada de dados do aplicativo, incluindo autenticação com Firebase Auth, persistência em tempo real com Firebase Realtime Database e comunicação HTTP com APIs externas via Retrofit.
+Para facilitar a correção do projeto e a navegação entre as diferentes permissões do app, já deixamos pré-configurados no Firebase quatro usuários de teste (um para cada cargo). 
 
-## 📋 Estrutura de Pastas
+A senha padrão para todos os acessos é: **`!Pa12345678`**
 
-```
-app/src/main/java/com/aguiabranca/inovacao/
-├── data/
-│   └── repository/
-│       ├── AuthRepository.kt      # Autenticação Firebase
-│       └── IdeaRepository.kt      # CRUD de Ideias
-├── models/
-│   ├── User.kt                    # Usuário e níveis de acesso (UserRole)
-│   ├── Idea.kt                    # Ideias de inovação
-│   ├── Strategy.kt                # Orientações Estratégicas
-│   └── Project.kt                 # Projetos corporativos
-├── network/
-│   ├── ApiService.kt              # Interface de endpoints REST (Retrofit)
-│   └── RetrofitClient.kt          # Inicialização do cliente HTTP com OkHttp e Gson
-└── utils/
-    └── Constants.kt               # Endpoints e mensagens do sistema
-```
-
-## 🔐 AuthRepository - Autenticação Firebase
-
-### Funcionalidades:
-*   `signIn()`: Login seguro com email/senha e validação de privilégios.
-*   `signUp()`: Cadastro de novos usuários salvando o perfil no Realtime Database (`users/`).
-*   `signOut()`: Encerramento seguro da sessão.
-*   `getCurrentUser()`: Recuperação do usuário autenticado no momento.
-*   `updateUserData()`: Atualização de perfil do usuário.
-*   `isUserLoggedIn()`: Verificação de sessão ativa.
-
-### Exemplo de uso:
-```kotlin
-val authRepo = AuthRepository()
-
-// Realizar Login
-when (val result = authRepo.signIn("user@email.com", "<senha>")) {
-    is AuthResult.Success -> {
-        val user = result.data
-        println("Logado como: ${user.name} | Cargo: ${user.role}")
-    }
-    is AuthResult.Error -> {
-        println("Erro no login: ${result.exception.message}")
-    }
-    AuthResult.Loading -> { /* Exibir loading */ }
-}
-```
+* **Operador** (Cadastra ideias e acompanha status): `operador@aguiabranca.com`
+* **Gestor** (Aprova ideias e gerencia projetos): `gestor@aguiabranca.com`
+* **Liderança** (Cadastra diretrizes e visualiza Dashboard): `lider@aguiabranca.com`
+* **Administrador** (Libera acesso de novos e-mails): `admin@aguiabranca.com`
 
 ---
 
-## 💡 IdeaRepository - CRUD de Ideias (Firebase)
+## 🛠️ Configuração do Firebase
 
-### Funcionalidades:
-*   `createIdea()`: Envia uma nova ideia/problema operacional gerando um ID exclusivo.
-*   `getIdeaById()`: Busca detalhes de uma proposta.
-*   `getIdeasByUser()`: Filtra ideias cadastradas por um operador específico.
-*   `getAllIdeasLiveData()`: Retorna um fluxo observável (`LiveData`) em tempo real contendo todas as ideias.
-*   `updateIdea()`: Atualiza dados de ideias em edição/rascunho.
-*   `approveIdea()` / `rejectIdea()`: Métodos para aprovação e justificativa de rejeição.
-*   `deleteIdea()`: Exclusão de registro.
+O arquivo `google-services.json` com as chaves de conexão ao nosso banco de dados de teste já está incluso na pasta `/app` deste repositório, permitindo rodar o projeto imediatamente no Android Studio.
 
-### Exemplo de uso:
-```kotlin
-val ideaRepo = IdeaRepository()
-
-// Criar nova ideia (Operador)
-val newIdea = Idea(
-    title = "Otimização de rotas de entrega",
-    description = "Sugestão de reordenamento no hub central...",
-    type = IdeaType.MELHORIA.name,
-    createdBy = "userUid123"
-)
-
-when (val result = ideaRepo.createIdea(newIdea)) {
-    is AuthResult.Success -> println("Ideia cadastrada com ID: ${result.data}")
-    is AuthResult.Error -> println("Falha ao salvar: ${result.exception.message}")
-    AuthResult.Loading -> { }
-}
-
-// Escuta em tempo real (UI)
-ideaRepo.getAllIdeasLiveData().observe(viewLifecycleOwner) { listaDeIdeias ->
-    // Atualiza a listagem no Compose
-}
-```
-
----
-
-## 🌐 Retrofit - APIs REST
-
-### Endpoints declarados (`ApiService.kt`):
-*   `GET /strategies` / `POST /strategies`: Manipulação das orientações estratégicas.
-*   `GET /ideas` / `POST /ideas` / `PATCH /ideas/{id}/approve`: Gestão alternativa de ideias.
-*   `GET /projects` / `POST /projects` / `PATCH /projects/{id}/progress`: Gestão do ciclo de vida dos projetos.
-
-### Exemplo de uso:
-```kotlin
-val apiService = RetrofitClient.getApiService()
-
-// Consumo assíncrono em Coroutine
-try {
-    val projetos = apiService.getAllProjects()
-    // Atualizar UI com os projetos e progresso
-} catch (e: Exception) {
-    // Tratar erro de conexão
-}
-```
-
----
-
-## 🏗️ Padrão de Resultado: `AuthResult<T>`
-
-Todas as chamadas assíncronas dos repositórios são encapsuladas na `sealed class` `AuthResult`, permitindo um controle de estado robusto na interface gráfica:
-
-```kotlin
-sealed class AuthResult<out T> {
-    data class Success<T>(val data: T) : AuthResult<T>()
-    data class Error(val exception: Exception) : AuthResult<Nothing>()
-    object Loading : AuthResult<Nothing>()
-}
-```
-
----
-
-## ⚙️ Próximas etapas:
-*   [ ] Adicionar plugin do Google Services no Gradle.
-*   [ ] Inserir arquivo `google-services.json` na pasta `/app`.
-*   [ ] Implementar `ProjectRepository` e `StrategyRepository` para o fluxo de projetos e diretrizes estratégicas.
-*   [ ] Criar os ViewModels para fazer a ponte entre as telas e repositórios.
-*   [ ] Desenvolver as telas com Compose utilizando Material Design 3.
+Caso precise testar com uma conta própria do Firebase:
+1. Crie um projeto no console do Firebase.
+2. Ative o Authentication (E-mail/Senha) e o Realtime Database.
+3. Substitua o arquivo em `/app/google-services.json` pelo seu arquivo gerado.
