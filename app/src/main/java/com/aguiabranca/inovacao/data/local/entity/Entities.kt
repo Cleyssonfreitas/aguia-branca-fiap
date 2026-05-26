@@ -46,6 +46,8 @@ data class IdeaEntity(
     val approvedBy: String?,
     val rejectionReason: String?,
     val views: Int,
+    val aiScore: Int?,
+    val aiFeedback: String?,
     val syncStatus: String = "SYNCED",
     val lastSyncedAt: Long = System.currentTimeMillis()
 )

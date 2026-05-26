@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.text.font.FontWeight
 import com.aguiabranca.inovacao.presentation.components.Message
 import com.aguiabranca.inovacao.domain.models.Idea
 import com.aguiabranca.inovacao.domain.models.UserRole
@@ -103,6 +104,23 @@ fun IdeaDetailScreen(
                     Text(text = "Área/Departamento: ${idea.department.ifBlank { "Geral" }}", style = MaterialTheme.typography.bodyMedium)
                     Text(text = "Impacto Estimado: ${idea.estimatedImpact.ifBlank { "Não informado" }}", style = MaterialTheme.typography.bodyMedium)
                     Text(text = "Visualizações: ${idea.views}", style = MaterialTheme.typography.bodyMedium)
+                }
+            }
+
+            // Análise da IA
+            if (idea.aiScore != null && !idea.aiFeedback.isNullOrBlank()) {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer)
+                ) {
+                    Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Text(text = "🤖", style = MaterialTheme.typography.headlineSmall)
+                            Text(text = "Análise da Inteligência Artificial", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onTertiaryContainer)
+                        }
+                        Text(text = "Score de Relevância: ${idea.aiScore} / 100", style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.onTertiaryContainer, fontWeight = FontWeight.Bold)
+                        Text(text = idea.aiFeedback!!, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onTertiaryContainer)
+                    }
                 }
             }
 

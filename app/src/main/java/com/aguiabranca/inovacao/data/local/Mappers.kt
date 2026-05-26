@@ -18,37 +18,41 @@ fun Strategy.toEntity() = StrategyEntity(id, title, description, createdBy, crea
 fun StrategyEntity.toModel() = Strategy(remoteId, title, description, createdBy, createdAt, updatedAt, isActive, priority)
 
 fun Idea.toEntity() = IdeaEntity(
-    id,
-    title,
-    description,
-    type,
-    status,
-    createdBy,
-    createdAt,
-    updatedAt,
-    priority,
-    estimatedImpact,
-    department,
-    approvedBy,
-    rejectionReason,
-    views
+    remoteId = id,
+    title = title,
+    description = description,
+    type = type,
+    status = status,
+    createdBy = createdBy,
+    createdAt = createdAt,
+    updatedAt = updatedAt,
+    priority = priority,
+    estimatedImpact = estimatedImpact,
+    department = department,
+    approvedBy = approvedBy,
+    rejectionReason = rejectionReason,
+    views = views,
+    aiScore = aiScore,
+    aiFeedback = aiFeedback
 )
 
 fun IdeaEntity.toModel() = Idea(
-    remoteId,
-    title,
-    description,
-    type,
-    status,
-    createdBy,
-    createdAt,
-    updatedAt,
-    priority,
-    estimatedImpact,
-    department,
-    approvedBy,
-    rejectionReason,
-    views
+    id = remoteId,
+    title = title,
+    description = description,
+    type = type,
+    status = status,
+    createdBy = createdBy,
+    createdAt = createdAt,
+    updatedAt = updatedAt,
+    priority = priority,
+    estimatedImpact = estimatedImpact,
+    department = department,
+    approvedBy = approvedBy,
+    rejectionReason = rejectionReason,
+    views = views,
+    aiScore = aiScore,
+    aiFeedback = aiFeedback
 )
 
 fun Project.toEntity() = ProjectEntity(

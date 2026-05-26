@@ -29,6 +29,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -58,7 +59,11 @@ fun OrientationsScreen(
         factory = com.aguiabranca.inovacao.presentation.screens.login.AuthViewModel.Factory(appContainer)
     )
     val authState by authViewModel.uiState.collectAsState()
-    val userRole = authState.currentUser?.role ?: UserRole.OPERADOR
+    val userRole = authState.currentUser?.role ?: com.aguiabranca.inovacao.domain.models.UserRole.OPERADOR
+
+    LaunchedEffect(Unit) {
+        viewModel.loadStrategies()
+    }
 
     var showDialog by remember { mutableStateOf(false) }
     var editingStrategy by remember { mutableStateOf<Strategy?>(null) }

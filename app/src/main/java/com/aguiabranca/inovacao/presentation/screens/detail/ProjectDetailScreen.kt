@@ -27,7 +27,7 @@ fun ProjectDetailScreen(
     project: Project,
     currentUserRole: UserRole,
     onBack: () -> Unit,
-    onUpdateProject: (String, String, String, String, String, Double, Double, Int) -> Unit,
+    onUpdateProject: (String, String, String, String, String, Double, Double, Int, List<String>) -> Unit,
     message: String?,
     onDismissMessage: () -> Unit
 ) {
@@ -235,7 +235,8 @@ fun ProjectDetailScreen(
                             status,
                             investment,
                             profit,
-                            progressVal.toInt()
+                            progressVal.toInt(),
+                            project.relatedIdeas
                         )
                         onBack()
                     },

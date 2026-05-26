@@ -29,7 +29,9 @@ data class CreateIdeaRequest(
     val description: String,
     val type: String,
     val estimatedImpact: String,
-    val department: String
+    val department: String,
+    val aiScore: Int? = null,
+    val aiFeedback: String? = null
 )
 
 data class ReviewIdeaRequest(

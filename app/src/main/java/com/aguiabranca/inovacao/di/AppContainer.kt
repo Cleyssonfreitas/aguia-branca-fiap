@@ -26,4 +26,8 @@ class AppContainer(val context: Context) {
     val projectRepository: ProjectRepository = repositories.projectRepository
 
     val dashboardRepository: DashboardRepository = repositories.dashboardRepository
+
+    val evaluateIdeaUseCase = com.aguiabranca.inovacao.domain.usecase.EvaluateIdeaUseCase(
+        com.aguiabranca.inovacao.network.RetrofitClient.getApiService()
+    )
 }

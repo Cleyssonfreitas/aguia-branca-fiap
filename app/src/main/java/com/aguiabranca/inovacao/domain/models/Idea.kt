@@ -22,7 +22,9 @@ data class Idea(
     val department: String = "",
     val approvedBy: String? = null,
     val rejectionReason: String? = null,
-    val views: Int = 0
+    val views: Int = 0,
+    val aiScore: Int? = null,
+    val aiFeedback: String? = null
 ) {
     constructor() : this(
         id = "",

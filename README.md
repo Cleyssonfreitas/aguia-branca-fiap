@@ -1,27 +1,33 @@
-# Desafio Grupo Águia Branca - Inovação Corporativa
+# 🦅 Águia Branca - Inovação Corporativa
 
-Este aplicativo foi desenvolvido para a Sprint 1 do Challenge. O objetivo do app é conectar os colaboradores da Águia Branca para sugerir ideias de inovação, permitir que gestores priorizem essas ideias transformando-as em projetos, e que a liderança acompanhe os resultados gerais do negócio.
+Olá! Seja bem-vindo(a) ao repositório do nosso aplicativo desenvolvido para o **Challenge da Águia Branca**. 
 
----
+O nosso principal objetivo aqui foi criar uma plataforma que tire as ideias do papel e as transforme em inovação real. Construímos um fluxo completo: o colaborador na ponta da operação dá a ideia, o gestor recebe essa ideia (já pré-avaliada por uma Inteligência Artificial 🤖) para transformar em projeto, e a liderança consegue ver os resultados financeiros rolando em um dashboard bonitão.
 
-## 👥 Como testar o aplicativo (Credenciais inclusas)
+## ✨ O que tem de legal no app?
 
-Para facilitar a correção do projeto e a navegação entre as diferentes permissões do app, já deixamos pré-configurados no Firebase quatro usuários de teste (um para cada cargo). 
-
-A senha padrão para todos os acessos é: **`!Pa12345678`**
-
-* **Operador** (Cadastra ideias e acompanha status): `operador@aguiabranca.com`
-* **Gestor** (Aprova ideias e gerencia projetos): `gestor@aguiabranca.com`
-* **Liderança** (Cadastra diretrizes e visualiza Dashboard): `lider@aguiabranca.com`
-* **Administrador** (Libera acesso de novos e-mails): `admin@aguiabranca.com`
+* **Triagem Inteligente com IA (Google Gemini 2.5 Flash):** Acabou o sofrimento de ler dezenas de ideias inviáveis! Nossa integração com a API do Gemini avalia instantaneamente a ideia do Operador e já entrega para o Gestor uma nota de inovação e um feedback, ordenando a lista das melhores para as piores.
+* **Governança de TI:** O app não tem tela de cadastro público. Só o Administrador de TI libera as contas, garantindo máxima segurança.
+* **Dashboard Interativo:** Gráficos que calculam o ROI (Retorno sobre Investimento) dos projetos em tempo real para a Diretoria.
+* **Design Premium:** Telas construídas inteiramente com **Jetpack Compose** e arquitetura limpa (MVVM).
 
 ---
 
-## 🛠️ Configuração do Firebase
+## 👥 Como testar o aplicativo (Já deixamos tudo pronto!)
 
-O arquivo `google-services.json` com as chaves de conexão ao nosso banco de dados de teste já está incluso na pasta `/app` deste repositório, permitindo rodar o projeto imediatamente no Android Studio.
+Para facilitar a vida de quem for corrigir e testar, o banco de dados já está configurado com alguns usuários padrão. Assim você consegue ver a visão de cada cargo.
 
-Caso precise testar com uma conta própria do Firebase:
-1. Crie um projeto no console do Firebase.
-2. Ative o Authentication (E-mail/Senha) e o Realtime Database.
-3. Substitua o arquivo em `/app/google-services.json` pelo seu arquivo gerado.
+A senha para **todos** os acessos abaixo é: **`!Pa12345678`**
+
+* **Operador** (Dá as ideias): `operador@aguiabranca.com`
+* **Gestor** (Aprova ideias e toca os projetos): `gestor@aguiabranca.com`
+* **Liderança** (Cria estratégias e vê o Dashboard): `lider@aguiabranca.com`
+* **Admin** (Libera novos usuários): `admin@aguiabranca.com`
+
+---
+
+## 🛠️ Para quem vai rodar o código (Firebase)
+
+Não se preocupe em configurar banco de dados! Nós já deixamos o arquivo `google-services.json` (do nosso ambiente de teste) embutido no projeto. É só clonar o repositório, abrir no **Android Studio**, dar play no emulador (ou no cabo USB) e testar.
+
+*(Se por acaso quiser plugar no seu próprio Firebase, basta substituir o arquivo `/app/google-services.json` pelo seu).*

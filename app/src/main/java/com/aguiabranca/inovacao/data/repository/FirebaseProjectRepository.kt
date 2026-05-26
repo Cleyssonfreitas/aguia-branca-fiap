@@ -40,7 +40,7 @@ class FirebaseProjectRepository(
 
     override suspend fun saveProject(request: SaveProjectRequest): AppResult<Project> {
         return try {
-            val user = requireAnyRole(UserRole.GESTOR)
+            val user = requireAnyRole(UserRole.GESTOR, UserRole.LIDERANCA)
             request.relatedIdeas.forEach { ideaId ->
                 val idea = ideasRef.child(ideaId).get().await().getValue(Idea::class.java)
                 if (idea?.status != IdeaStatus.APROVADA.name) error("Projetos só podem vincular ideias aprovadas.")

@@ -22,7 +22,8 @@ data class IdeasUiState(
 )
 
 class IdeasViewModel(
-    private val ideaRepository: IdeaRepository
+    private val ideaRepository: IdeaRepository,
+    private val evaluateIdeaUseCase: com.aguiabranca.inovacao.domain.usecase.EvaluateIdeaUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(IdeasUiState())
@@ -46,17 +47,22 @@ class IdeasViewModel(
 
     fun createIdea(title: String, description: String, impact: String, department: String, role: UserRole) {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
+            _uiState.update { it.copy(isLoading = true, message = "Analisando com Inteligência Artificial...") }
+            
+            val aiEvaluation = evaluateIdeaUseCase.evaluate(title, description, impact)
+            
             val request = CreateIdeaRequest(
                 title = title.trim(),
                 description = description.trim(),
                 type = IdeaType.PROBLEMA.name,
                 estimatedImpact = impact.trim(),
-                department = department.trim()
+                department = department.trim(),
+                aiScore = aiEvaluation?.score,
+                aiFeedback = aiEvaluation?.feedback
             )
             when (val result = ideaRepository.createIdea(request)) {
                 is AppResult.Success -> {
-                    _uiState.update { it.copy(message = "Ideia registrada.", isLoading = false) }
+                    _uiState.update { it.copy(message = "Ideia registrada com sucesso.", isLoading = false) }
                     loadIdeas(role)
                 }
                 is AppResult.Error -> _uiState.update { it.copy(message = result.message, isLoading = false) }
@@ -71,7 +77,10 @@ class IdeasViewModel(
     class Factory(private val container: AppContainer) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return IdeasViewModel(ideaRepository = container.ideaRepository) as T
+            return IdeasViewModel(
+                ideaRepository = container.ideaRepository,
+                evaluateIdeaUseCase = container.evaluateIdeaUseCase
+            ) as T
         }
     }
 }

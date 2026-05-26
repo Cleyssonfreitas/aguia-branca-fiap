@@ -47,7 +47,9 @@ internal fun Map<*, *>.toIdea(): Idea {
         department = readString("department"),
         approvedBy = readNullableString("approvedBy"),
         rejectionReason = readNullableString("rejectionReason"),
-        views = readInt("views")
+        views = readInt("views"),
+        aiScore = readNullableInt("aiScore"),
+        aiFeedback = readNullableString("aiFeedback")
     )
 }
 
@@ -98,3 +100,5 @@ private fun Map<*, *>.readStringList(key: String): List<String> {
     val value = this[key] as? List<*> ?: return emptyList()
     return value.mapNotNull { it?.toString() }
 }
+
+private fun Map<*, *>.readNullableInt(key: String) = (this[key] as? Number)?.toInt()

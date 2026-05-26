@@ -44,7 +44,9 @@ class FirebaseIdeaRepository(
                 createdAt = now,
                 updatedAt = now,
                 estimatedImpact = request.estimatedImpact,
-                department = request.department
+                department = request.department,
+                aiScore = request.aiScore,
+                aiFeedback = request.aiFeedback
             )
             ideasRef.child(id).setValue(idea).await()
             ideaDao.upsert(idea.toEntity())

@@ -24,7 +24,7 @@ class ProjectDetailViewModel(
     private val _uiState = MutableStateFlow(ProjectDetailUiState())
     val uiState: StateFlow<ProjectDetailUiState> = _uiState
 
-    fun updateProject(id: String, title: String, description: String, stage: String, status: String, investment: Double, profit: Double, progress: Int) {
+    fun updateProject(id: String, title: String, description: String, stage: String, status: String, investment: Double, profit: Double, progress: Int, relatedIdeas: List<String>) {
         viewModelScope.launch {
             val roi = if (investment > 0) ((profit - investment) / investment) * 100 else 0.0
             
@@ -41,7 +41,8 @@ class ProjectDetailViewModel(
                         investment = investment,
                         profit = profit,
                         roi = roi,
-                        progress = progress
+                        progress = progress,
+                        relatedIdeas = relatedIdeas
                     )
                 ),
                 "Projeto atualizado."

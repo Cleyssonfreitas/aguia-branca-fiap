@@ -112,8 +112,8 @@ fun AppContent(appContainer: AppContainer) {
                 project = project,
                 currentUserRole = userRole,
                 onBack = { navController.popBackStack() },
-                onUpdateProject = { id, title, desc, stage, status, investment, profit, progress ->
-                    projectDetailViewModel.updateProject(id, title, desc, stage, status, investment, profit, progress)
+                onUpdateProject = { id, title, desc, stage, status, investment, profit, progress, relatedIdeas ->
+                    projectDetailViewModel.updateProject(id, title, desc, stage, status, investment, profit, progress, relatedIdeas)
                 },
                 message = projectState.message,
                 onDismissMessage = projectDetailViewModel::dismissMessage

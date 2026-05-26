@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.AlertDialog
@@ -109,7 +110,13 @@ fun IdeasScreen(
                         }
                     }
 
-                    items(state.ideas) { idea ->
+                    val sortedIdeas = if (userRole == UserRole.GESTOR) {
+                        state.ideas.sortedByDescending { it.aiScore ?: 0 }
+                    } else {
+                        state.ideas.sortedByDescending { it.createdAt }
+                    }
+
+                    items(sortedIdeas) { idea ->
                         ModernCard(onClick = { onNavigateToIdeaDetail(idea) }) {
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
@@ -122,11 +129,28 @@ fun IdeasScreen(
                                     color = MaterialTheme.colorScheme.primary,
                                     modifier = Modifier.weight(1f)
                                 )
-                                Text(
-                                    text = idea.status,
-                                    style = MaterialTheme.typography.labelSmall,
-                                    color = MaterialTheme.colorScheme.secondary
-                                )
+                                Column(horizontalAlignment = Alignment.End) {
+                                    Text(
+                                        text = idea.status,
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = MaterialTheme.colorScheme.secondary
+                                    )
+                                    if (idea.aiScore != null) {
+                                        Spacer(modifier = Modifier.height(4.dp))
+                                        androidx.compose.material3.Surface(
+                                            color = androidx.compose.material3.MaterialTheme.colorScheme.tertiaryContainer,
+                                            shape = androidx.compose.foundation.shape.RoundedCornerShape(4.dp)
+                                        ) {
+                                            Text(
+                                                text = "🤖 IA Score: ${idea.aiScore}",
+                                                style = androidx.compose.material3.MaterialTheme.typography.labelSmall,
+                                                color = androidx.compose.material3.MaterialTheme.colorScheme.onTertiaryContainer,
+                                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                        }
+                                    }
+                                }
                             }
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
@@ -148,7 +172,10 @@ fun IdeasScreen(
             onDismissRequest = { showDialog = false },
             title = { Text(text = "Nova Ideia / Sugestão") },
             text = {
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Column(
+                    modifier = Modifier.verticalScroll(androidx.compose.foundation.rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
                     OutlinedTextField(
                         value = title,
                         onValueChange = { title = it },
