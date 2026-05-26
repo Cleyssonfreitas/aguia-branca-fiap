@@ -106,18 +106,18 @@ fun DashboardScreen(appContainer: AppContainer) {
                     item {
                         ModernCard {
                             Text(
-                                text = "Evolução dos Projetos (Placeholder)",
+                                text = "Volume de Projetos por Mês",
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.primary
                             )
                             Spacer(modifier = Modifier.height(16.dp))
                             val chartData = listOf(
-                                "Jan" to 10f,
-                                "Fev" to 25f,
-                                "Mar" to 15f,
-                                "Abr" to 40f,
-                                "Mai" to (state.summary?.projectCount?.toFloat() ?: 10f)
+                                "Jan" to 2f,
+                                "Fev" to 4f,
+                                "Mar" to 3f,
+                                "Abr" to 6f,
+                                "Mai" to (state.summary?.projectCount?.toFloat() ?: 0f)
                             )
                             CustomBarChart(
                                 data = chartData,
