@@ -30,6 +30,8 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.aguiabranca.inovacao.domain.models.CurrentUser
 import com.aguiabranca.inovacao.domain.models.UserRole
+import com.aguiabranca.inovacao.domain.models.Idea
+import com.aguiabranca.inovacao.domain.models.Project
 
 import com.aguiabranca.inovacao.presentation.screens.dashboard.DashboardScreen
 import com.aguiabranca.inovacao.presentation.screens.ideas.IdeasScreen
@@ -52,7 +54,9 @@ fun MainScreen(
     currentUser: CurrentUser,
     onNavigateToProfile: () -> Unit,
     navController: NavHostController = rememberNavController(),
-    appContainer: AppContainer
+    appContainer: AppContainer,
+    onNavigateToIdeaDetail: (Idea) -> Unit,
+    onNavigateToProjectDetail: (Project) -> Unit
 ) {
     val items = mutableListOf<BottomNavItem>()
 
@@ -169,10 +173,10 @@ fun MainScreen(
                 OrientationsScreen(appContainer)
             }
             composable(BottomNavItem.Ideas.route) {
-                IdeasScreen(appContainer)
+                IdeasScreen(appContainer, onNavigateToIdeaDetail)
             }
             composable(BottomNavItem.Projects.route) {
-                ProjectsScreen(appContainer)
+                ProjectsScreen(appContainer, onNavigateToProjectDetail)
             }
             composable(BottomNavItem.Dashboard.route) {
                 DashboardScreen(appContainer)

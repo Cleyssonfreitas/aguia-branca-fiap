@@ -58,9 +58,15 @@ fun AppContent(appContainer: AppContainer) {
                     onNavigateToProfile = {
                         navController.navigate("profile")
                     },
-                    appContainer = appContainer
-                    // In the future we will pass navigateToIdeaDetail and navigateToProjectDetail here
-                    // so that the bottom navigation screens can navigate to details in the parent NavHost
+                    appContainer = appContainer,
+                    onNavigateToIdeaDetail = { idea ->
+                        val json = Uri.encode(Gson().toJson(idea))
+                        navController.navigate("ideaDetail/$json")
+                    },
+                    onNavigateToProjectDetail = { project ->
+                        val json = Uri.encode(Gson().toJson(project))
+                        navController.navigate("projectDetail/$json")
+                    }
                 )
             }
         }

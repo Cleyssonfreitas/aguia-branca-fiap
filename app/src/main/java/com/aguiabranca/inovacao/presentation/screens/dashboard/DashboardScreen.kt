@@ -32,6 +32,10 @@ fun DashboardScreen(appContainer: AppContainer) {
     val viewModel: DashboardViewModel = viewModel(factory = DashboardViewModel.Factory(appContainer))
     val state by viewModel.uiState.collectAsState()
 
+    androidx.compose.runtime.LaunchedEffect(Unit) {
+        viewModel.loadDashboard()
+    }
+
     Scaffold { paddingValues ->
         Column(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
             if (state.isLoading) {

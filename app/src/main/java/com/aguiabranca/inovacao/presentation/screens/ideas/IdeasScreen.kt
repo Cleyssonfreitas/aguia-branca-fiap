@@ -13,37 +13,53 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.aguiabranca.inovacao.di.AppContainer
+import com.aguiabranca.inovacao.domain.models.Idea
 import com.aguiabranca.inovacao.domain.models.UserRole
 import com.aguiabranca.inovacao.presentation.components.ModernCard
 import com.aguiabranca.inovacao.presentation.components.Message
 
 @Composable
-fun IdeasScreen(appContainer: AppContainer) {
+fun IdeasScreen(
+    appContainer: AppContainer,
+    onNavigateToIdeaDetail: (Idea) -> Unit
+) {
     val viewModel: IdeasViewModel = viewModel(factory = IdeasViewModel.Factory(appContainer))
     val state by viewModel.uiState.collectAsState()
     
-    // Assumindo que você tem acesso ao perfil. Para simplificar, vou considerar que o ViewModel 
-    // lida com carregar para o perfil atual baseado no token ou passaremos o UserRole.
-    // O certo seria ler do SessionManager. Por enquanto vamos usar o authRepo para pegar o User:
-    val authViewModel: com.aguiabranca.inovacao.presentation.screens.login.AuthViewModel = viewModel(factory = com.aguiabranca.inovacao.presentation.screens.login.AuthViewModel.Factory(appContainer))
+    val authViewModel: com.aguiabranca.inovacao.presentation.screens.login.AuthViewModel = viewModel(
+        factory = com.aguiabranca.inovacao.presentation.screens.login.AuthViewModel.Factory(appContainer)
+    )
     val authState by authViewModel.uiState.collectAsState()
     val userRole = authState.currentUser?.role ?: UserRole.OPERADOR
+
+    var showDialog by remember { mutableStateOf(false) }
+    var title by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
+    var impact by remember { mutableStateOf("") }
+    var department by remember { mutableStateOf("") }
 
     LaunchedEffect(userRole) {
         viewModel.loadIdeas(userRole)
@@ -52,7 +68,7 @@ fun IdeasScreen(appContainer: AppContainer) {
     Scaffold(
         floatingActionButton = {
             if (userRole == UserRole.OPERADOR || userRole == UserRole.GESTOR) {
-                FloatingActionButton(onClick = { /* Navegar para CreateIdeaScreen */ }) {
+                FloatingActionButton(onClick = { showDialog = true }) {
                     Icon(Icons.Default.Add, contentDescription = "Adicionar Ideia")
                 }
             }
@@ -94,7 +110,7 @@ fun IdeasScreen(appContainer: AppContainer) {
                     }
 
                     items(state.ideas) { idea ->
-                        ModernCard(onClick = { /* Nav to Detail */ }) {
+                        ModernCard(onClick = { onNavigateToIdeaDetail(idea) }) {
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween
@@ -125,5 +141,66 @@ fun IdeasScreen(appContainer: AppContainer) {
             }
             Message(message = state.message, onDismiss = viewModel::dismissMessage)
         }
+    }
+
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { Text(text = "Nova Ideia / Sugestão") },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    OutlinedTextField(
+                        value = title,
+                        onValueChange = { title = it },
+                        label = { Text("Título") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    OutlinedTextField(
+                        value = description,
+                        onValueChange = { description = it },
+                        label = { Text("Descrição do problema/melhoria") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    OutlinedTextField(
+                        value = impact,
+                        onValueChange = { impact = it },
+                        label = { Text("Impacto estimado (Financeiro/Produtividade)") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    OutlinedTextField(
+                        value = department,
+                        onValueChange = { department = it },
+                        label = { Text("Departamento") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        viewModel.createIdea(
+                            title = title,
+                            description = description,
+                            impact = impact,
+                            department = department,
+                            role = userRole
+                        )
+                        showDialog = false
+                        title = ""
+                        description = ""
+                        impact = ""
+                        department = ""
+                    },
+                    enabled = title.isNotBlank() && description.isNotBlank() && department.isNotBlank()
+                ) {
+                    Text("Enviar")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDialog = false }) {
+                    Text("Cancelar")
+                }
+            }
+        )
     }
 }
